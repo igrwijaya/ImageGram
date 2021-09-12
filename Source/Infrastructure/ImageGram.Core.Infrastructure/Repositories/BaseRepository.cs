@@ -229,6 +229,13 @@ namespace ImageGram.Core.Infrastructure.Repositories
                 ? await entities.Where(predicate).ToListAsync()
                 : await entities.Where(predicate).Take(limit).ToListAsync();
         }
+        
+        protected async Task<IEnumerable<TResult>> SearchAsync<TResult>(Func<DbSet<TEntity>, IEnumerable<TResult>> extendedQuery)
+        {
+            var dbSet = Context.Set<TEntity>();
+
+            return extendedQuery.Invoke(dbSet);
+        }
 
         #endregion
     }

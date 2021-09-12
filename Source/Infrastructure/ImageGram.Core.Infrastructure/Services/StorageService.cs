@@ -36,6 +36,11 @@ namespace ImageGram.Core.Infrastructure.Services
 
         public string GetFileUrl(string fileName)
         {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return string.Empty;
+            }
+            
             return GetUrl(fileName);
         }
 

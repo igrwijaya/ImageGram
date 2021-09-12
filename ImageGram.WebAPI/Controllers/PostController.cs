@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ImageGram.Core.Application.Commons;
 using ImageGram.Core.Application.Domain.Post.Commands.AddPostCommentByUser;
 using ImageGram.Core.Application.Domain.Post.Commands.CreatePostByUser;
+using ImageGram.Core.Application.Domain.Post.Queries.GetPostWithLatestComment;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -43,6 +45,16 @@ namespace ImageGram.WebAPI.Controllers
         public async Task<ActionResult<BaseCommandResult>> AddComment(AddPostCommentByUserCommand command)
         {
             return await Mediator.Send(command);
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult<BaseQueryResult<List<GetPostWithLatestCommentDto>>>> Get(int startIndex, int length)
+        {
+            return await Mediator.Send(new GetPostWithLatestCommentQuery
+            {
+                StartIndex = startIndex,
+                Length = length
+            });
         }
 
         #endregion
