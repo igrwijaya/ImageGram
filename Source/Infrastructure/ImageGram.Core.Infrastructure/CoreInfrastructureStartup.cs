@@ -1,8 +1,10 @@
 using System;
 using ImageGram.Core.Application.Services;
 using ImageGram.Core.Constant.Constant;
+using ImageGram.Core.Domain.AggregateRoots.Post;
 using ImageGram.Core.Infrastructure.DataSources;
 using ImageGram.Core.Infrastructure.Models;
+using ImageGram.Core.Infrastructure.Repositories.Post;
 using ImageGram.Core.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -43,8 +45,10 @@ namespace ImageGram.Core.Infrastructure
 
             #region Repositories
 
+            services.AddScoped<IPostRepository, PostRepository>();
+
             #endregion
-            
+
         }
     }
 }
