@@ -57,7 +57,14 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
                 Comments = comments;
             }
         }
+        
+        public void DeleteComment()
+        {
+            Comments = new List<Comment>();
+        }
 
         #endregion
+
+        
     }
 }

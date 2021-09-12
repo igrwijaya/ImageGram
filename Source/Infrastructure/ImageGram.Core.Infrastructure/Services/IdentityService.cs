@@ -93,6 +93,17 @@ namespace ImageGram.Core.Infrastructure.Services
             return response;
         }
 
+        public async Task DeleteAsync(string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return;
+            }
+            
+            await _userManager.DeleteAsync(user);
+        }
+
         #endregion
         
         #region Private Methods

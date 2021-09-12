@@ -46,7 +46,8 @@ namespace ImageGram.Core.Application.Domain.Post.Commands.CreatePostByUser
             }
             
             var fileName = string.Format(
-                StorageConstant.PostImageFormat, 
+                StorageConstant.PostImageFormat,
+                accountId,
                 Guid.NewGuid(), 
                 StorageConstant.DefaultImageFormat);
             

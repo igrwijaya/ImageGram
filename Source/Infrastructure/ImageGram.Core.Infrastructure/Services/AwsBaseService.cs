@@ -77,6 +77,57 @@ namespace ImageGram.Core.Infrastructure.Services
             return response;
         }
 
+        protected async Task<BasicResponse> DeleteUserFilesAsync(string folderNameKey, string prefix)
+        {
+            var response = new BasicResponse();
+            
+            try
+            {
+                SetupAwsCredential();
+
+                if (!_sharedCredentialsFile.TryGetProfile("source_profile", out var basicProfile) ||
+                    !AWSCredentialsFactory.TryGetAWSCredentials(basicProfile, _sharedCredentialsFile, out var awsCredentials))
+                {
+                    throw new Exception("Storage credential not found!");
+                }
+
+                using var client = new AmazonS3Client(awsCredentials, basicProfile.Region);
+                if (await AmazonS3Util.DoesS3BucketExistV2Async(client, _configuration[ConfigurationConstant.AwsS3Bucket]) == false)
+                {
+                    throw new Exception("Storage not exist");
+                }
+
+                var request = new ListObjectsRequest  
+                {  
+                    BucketName = _configuration[ConfigurationConstant.AwsS3Bucket],
+                    Prefix = _configuration[folderNameKey] + "/" + prefix  
+                };
+            
+                var objects = await client.ListObjectsAsync(request);
+
+                foreach (var userFile in objects.S3Objects)
+                {
+                    var deleteFileRequest = new DeleteObjectRequest  
+                    {  
+                        BucketName = _configuration[ConfigurationConstant.AwsS3Bucket],  
+                        Key = userFile.Key  
+                    };  
+                    
+                    await client.DeleteObjectAsync(deleteFileRequest); 
+                }
+            }
+            catch (AmazonS3Exception e)
+            {
+                response.AddErrorMessage(e.Message);
+            }
+            catch (Exception e)
+            {
+                response.AddErrorMessage(e.Message);
+            }
+
+            return response;
+        }
+
         protected string GetUrl(string fileName)
         {
             return _configuration[ConfigurationConstant.AwsS3Url] + fileName;

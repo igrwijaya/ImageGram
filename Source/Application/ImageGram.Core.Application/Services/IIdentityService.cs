@@ -11,6 +11,8 @@ namespace ImageGram.Core.Application.Services
 
         Task<IdentityResponse> LoginAsync(string email, string password);
 
+        Task DeleteAsync(string userId);
+
         #endregion
     }
 }

@@ -44,6 +44,11 @@ namespace ImageGram.Core.Infrastructure.Services
             return GetUrl(fileName);
         }
 
+        public async Task DeleteUserImagesAsync(string folderNameKey, int accountId)
+        {
+            await DeleteUserFilesAsync(folderNameKey, $"{accountId}-");
+        }
+
         #endregion
 
     }

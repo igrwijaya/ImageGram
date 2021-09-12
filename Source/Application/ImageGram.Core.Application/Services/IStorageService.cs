@@ -12,6 +12,8 @@ namespace ImageGram.Core.Application.Services
 
         string GetFileUrl(string fileName);
 
+        Task DeleteUserImagesAsync(string folderNameKey, int accountId);
+
         #endregion
     }
 }

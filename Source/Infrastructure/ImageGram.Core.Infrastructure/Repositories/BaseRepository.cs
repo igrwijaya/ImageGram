@@ -63,6 +63,11 @@ namespace ImageGram.Core.Infrastructure.Repositories
             var dbSet = Context.Set<TEntity>();
             var entity = await dbSet.FindAsync(id);
 
+            if (entity == null)
+            {
+                return;
+            }
+
             dbSet.Remove(entity);
 
             await Context.SaveChangesAsync();

@@ -38,6 +38,16 @@ namespace ImageGram.Core.Infrastructure.Repositories.Post
             });
         }
 
+        public async Task DeletePostAsync(int accountId)
+        {
+            var commentContext = Context.Set<Comment>();
+            var comments = commentContext.Where(item => item.AccountId == accountId);
+            
+            commentContext.RemoveRange(comments);
+
+            await DeleteAsync(item => item.AccountId == accountId);
+        }
+
         #endregion
     }
 }

@@ -11,6 +11,8 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
 
         Task<IEnumerable<PostWithLatestCommentDto>> GetWithCommentsAsync(int startIndex, int length);
 
+        Task DeletePostAsync(int accountId);
+
         #endregion
     }
 }
