@@ -3,9 +3,16 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <PackageReference Include="Amazon.Lambda.AspNetCoreServer" Version="5.3.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.5" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.2" />
+    </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3"/>
+      <ProjectReference Include="..\Source\Application\ImageGram.Core.Application.Domain\ImageGram.Core.Application.Domain.csproj" />
+      <ProjectReference Include="..\Source\Infrastructure\ImageGram.Core.Infrastructure\ImageGram.Core.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

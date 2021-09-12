@@ -41,7 +41,7 @@ namespace ImageGram.Core.Infrastructure.Services
 
         #region IIdentityService Members
 
-        public async Task<IdentityResponse> CreateAsync(string name, string email, string password, string role)
+        public async Task<IdentityResponse> CreateAsync(string name, string email, string password)
         {
             var response = new IdentityResponse();
             try
@@ -49,6 +49,7 @@ namespace ImageGram.Core.Infrastructure.Services
                 var user = new AppIdentityModel
                 {
                     Name = name,
+                    UserName = email,
                     Email = email
                 };
 
@@ -61,8 +62,6 @@ namespace ImageGram.Core.Infrastructure.Services
                     return response;
                 }
 
-                await _userManager.AddToRoleAsync(user, role);
-
                 response.UserId = user.Id;
             }
             catch (Exception e)
@@ -73,7 +72,7 @@ namespace ImageGram.Core.Infrastructure.Services
             return response;
         }
 
-        public async Task<IdentityResponse> LoginAsync(string email, string password, string expectedRole)
+        public async Task<IdentityResponse> LoginAsync(string email, string password)
         {
             var response = new IdentityResponse();
             var loginResult = await _signInManager.PasswordSignInAsync(email, password, false, false);
@@ -85,13 +84,6 @@ namespace ImageGram.Core.Infrastructure.Services
             }
 
             var user = await _userManager.FindByEmailAsync(email);
-
-            var isCorrectRole = await _userManager.IsInRoleAsync(user, expectedRole);
-            if (!isCorrectRole)
-            {
-                response.ErrorMessages.Add("Invalid Access");
-                return response;
-            }
 
             response.UserId = user.Id;
             response.Token = GenerateToken(user);
