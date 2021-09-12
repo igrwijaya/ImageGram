@@ -6,9 +6,9 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
     {
         #region Constructors
 
-        public Comment(string userId, int postId, string content)
+        public Comment(int accountId, int postId, string content)
         {
-            UserId = userId;
+            AccountId = accountId;
             PostId = postId;
             Content = content;
         }
@@ -17,7 +17,7 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
 
         #region Properties
 
-        public string UserId { get; private set; }
+        public int AccountId { get; private set; }
         
         public int PostId { get; private set; }
 
@@ -32,10 +32,5 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
         public Account.Account Account { get; set; }
 
         #endregion
-        
-        protected override void EnsureValidState()
-        {
-            
-        }
     }
 }

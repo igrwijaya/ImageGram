@@ -1,9 +1,11 @@
 using System;
 using ImageGram.Core.Application.Services;
 using ImageGram.Core.Constant.Constant;
+using ImageGram.Core.Domain.AggregateRoots.Account;
 using ImageGram.Core.Domain.AggregateRoots.Post;
 using ImageGram.Core.Infrastructure.DataSources;
 using ImageGram.Core.Infrastructure.Models;
+using ImageGram.Core.Infrastructure.Repositories.Common;
 using ImageGram.Core.Infrastructure.Repositories.Post;
 using ImageGram.Core.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
@@ -24,7 +26,7 @@ namespace ImageGram.Core.Infrastructure
                         new MySqlServerVersion(new Version(8, 0)))
             );
             
-            services.AddIdentity<AppIdentityModel, IdentityRole>(options => 
+            services.AddIdentity<AppUserIdentity, IdentityRole>(options => 
                 {
                     options.Password.RequireDigit = false;
                     options.Password.RequiredLength = 6;
@@ -45,6 +47,7 @@ namespace ImageGram.Core.Infrastructure
 
             #region Repositories
 
+            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IPostRepository, PostRepository>();
 
             #endregion

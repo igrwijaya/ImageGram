@@ -7,7 +7,7 @@ namespace ImageGram.Core.Application.Services
     {
         #region Public Methods
 
-        Task<IdentityResponse> CreateAsync(string name, string email, string password);
+        Task<IdentityResponse> CreateAsync(int accountId, string email, string password);
 
         Task<IdentityResponse> LoginAsync(string email, string password);
 

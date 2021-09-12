@@ -22,6 +22,13 @@ namespace ImageGram.Core.Constant.Constant
         public const string AwsSecretKey = "AWS:SecretKey";
         public const string AwsS3Url = "AWS:PublicS3Url";
         public const string AwsS3Bucket = "AWS:S3Bucket:Root";
+        public const string AwsS3PostBucket = "AWS:S3Bucket:Post";
+
+        #endregion
+
+        #region Image
+
+        public const string AllowedImageExtension = "Image:AllowedExtensions";
 
         #endregion
     }

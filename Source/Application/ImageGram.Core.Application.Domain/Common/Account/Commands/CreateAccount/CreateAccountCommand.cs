@@ -1,7 +1,7 @@
 using ImageGram.Core.Application.Commons;
 using MediatR;
 
-namespace ImageGram.Core.Application.Domain.Common.Account.Command.CreateAccount
+namespace ImageGram.Core.Application.Domain.Common.Account.Commands.CreateAccount
 {
     public class CreateAccountCommand : IRequest<BaseCommandResult<string>>
     {

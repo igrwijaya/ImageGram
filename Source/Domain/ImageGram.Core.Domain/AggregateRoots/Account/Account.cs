@@ -4,33 +4,30 @@ using ImageGram.Core.Domain.Commons;
 
 namespace ImageGram.Core.Domain.AggregateRoots.Account
 {
-    public interface IAccount : IAggregateRoot
+    public class Account : CoreEntity, IAggregateRoot
     {
-        #region Properties
+        #region Constructors
 
-        public string Id { get; set; }
-        
-        public string Name { get; set; }
+        public Account(string name)
+        {
+            Name = name;
+        }
+
+        #endregion
+
+        #region Entity Properties
+
+        public string Name { get; private set; }
 
         #endregion
 
         #region Entity Relation Properties
 
         public IEnumerable<Post.Post> Posts { get; set; }
-
+        
         public IEnumerable<Comment> Comments { get; set; }
 
         #endregion
-    }
-    
-    public class Account : IAccount
-    {
-        public string Id { get; set; }
         
-        public string Name { get; set; }
-        
-        public IEnumerable<Post.Post> Posts { get; set; }
-        
-        public IEnumerable<Comment> Comments { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 using FluentValidation;
 using ImageGram.Core.Constant.Entity;
 
-namespace ImageGram.Core.Application.Domain.Common.Account.Command.CreateAccount
+namespace ImageGram.Core.Application.Domain.Common.Account.Commands.CreateAccount
 {
     public class CreateAccountCommandValidator : AbstractValidator<CreateAccountCommand>
     {

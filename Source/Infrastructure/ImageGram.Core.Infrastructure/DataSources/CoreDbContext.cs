@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ImageGram.Core.Infrastructure.DataSources
 {
-    public class CoreDbContext : IdentityDbContext<AppIdentityModel>
+    public class CoreDbContext : IdentityDbContext<AppUserIdentity>
     {
         
         #region Fields

@@ -16,5 +16,17 @@ namespace ImageGram.WebAPI.Infrastructures
         public string UserId => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Sid);
         
         public string UserEmail => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
+
+        public int AccountId
+        {
+            get
+            {
+                var sessionAccountId = _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                int.TryParse(sessionAccountId, out var accountId);
+                
+                return accountId;
+            }
+        }
     }
 }

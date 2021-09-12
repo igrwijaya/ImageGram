@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using ImageGram.Core.Application.Commons;
-using ImageGram.Core.Application.Domain.Common.Account.Command.CreateAccount;
+using ImageGram.Core.Application.Domain.Common.Account.Commands.CreateAccount;
 using ImageGram.Core.Application.Domain.Common.Account.Queries.AccountLogin;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ImageGram.App.DbMigrations.Migrations
 {
     [DbContext(typeof(CoreDbContext))]
-    [Migration("20210912100954_InitialPostTables")]
-    partial class InitialPostTables
+    [Migration("20210912130355_InitialIdentityAndPostTables")]
+    partial class InitialIdentityAndPostTables
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,11 +21,28 @@ namespace ImageGram.App.DbMigrations.Migrations
 
             modelBuilder.Entity("ImageGram.Core.Domain.AggregateRoots.Account.Account", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime>("CreatedDateTime")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
+
+                    b.Property<DateTime?>("LastModifiedDateTime")
+                        .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -38,8 +55,8 @@ namespace ImageGram.App.DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("AppIdentityModelId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Content")
                         .IsRequired()
@@ -63,17 +80,11 @@ namespace ImageGram.App.DbMigrations.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AppIdentityModelId");
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("PostId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Comment");
                 });
@@ -84,8 +95,8 @@ namespace ImageGram.App.DbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<string>("AppIdentityModelId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+                    b.Property<int>("AccountId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Caption")
                         .IsRequired()
@@ -110,25 +121,22 @@ namespace ImageGram.App.DbMigrations.Migrations
                     b.Property<DateTime?>("LastModifiedDateTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AppIdentityModelId");
-
-                    b.HasIndex("UserId");
+                    b.HasIndex("AccountId");
 
                     b.ToTable("Post");
                 });
 
-            modelBuilder.Entity("ImageGram.Core.Infrastructure.Models.AppIdentityModel", b =>
+            modelBuilder.Entity("ImageGram.Core.Infrastructure.Models.AppUserIdentity", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
                     b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccountId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -147,11 +155,6 @@ namespace ImageGram.App.DbMigrations.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -181,6 +184,8 @@ namespace ImageGram.App.DbMigrations.Migrations
                         .HasColumnType("varchar(256) CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AccountId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -322,20 +327,16 @@ namespace ImageGram.App.DbMigrations.Migrations
 
             modelBuilder.Entity("ImageGram.Core.Domain.AggregateRoots.Post.Comment", b =>
                 {
-                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppIdentityModel", null)
+                    b.HasOne("ImageGram.Core.Domain.AggregateRoots.Account.Account", "Account")
                         .WithMany("Comments")
-                        .HasForeignKey("AppIdentityModelId");
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("ImageGram.Core.Domain.AggregateRoots.Post.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("ImageGram.Core.Domain.AggregateRoots.Account.Account", "Account")
-                        .WithMany("Comments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Account");
@@ -345,13 +346,20 @@ namespace ImageGram.App.DbMigrations.Migrations
 
             modelBuilder.Entity("ImageGram.Core.Domain.AggregateRoots.Post.Post", b =>
                 {
-                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppIdentityModel", null)
-                        .WithMany("Posts")
-                        .HasForeignKey("AppIdentityModelId");
-
                     b.HasOne("ImageGram.Core.Domain.AggregateRoots.Account.Account", "Account")
                         .WithMany("Posts")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("AccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Account");
+                });
+
+            modelBuilder.Entity("ImageGram.Core.Infrastructure.Models.AppUserIdentity", b =>
+                {
+                    b.HasOne("ImageGram.Core.Domain.AggregateRoots.Account.Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("AccountId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -369,7 +377,7 @@ namespace ImageGram.App.DbMigrations.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppIdentityModel", null)
+                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -378,7 +386,7 @@ namespace ImageGram.App.DbMigrations.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppIdentityModel", null)
+                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -393,7 +401,7 @@ namespace ImageGram.App.DbMigrations.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppIdentityModel", null)
+                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -402,7 +410,7 @@ namespace ImageGram.App.DbMigrations.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppIdentityModel", null)
+                    b.HasOne("ImageGram.Core.Infrastructure.Models.AppUserIdentity", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -419,13 +427,6 @@ namespace ImageGram.App.DbMigrations.Migrations
             modelBuilder.Entity("ImageGram.Core.Domain.AggregateRoots.Post.Post", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("ImageGram.Core.Infrastructure.Models.AppIdentityModel", b =>
-                {
-                    b.Navigation("Comments");
-
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

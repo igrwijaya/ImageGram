@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using ImageGram.Core.Domain.Commons;
 
 namespace ImageGram.Core.Domain.AggregateRoots.Post
@@ -7,18 +8,17 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
     {
         #region Constructors
 
-        public Post(string userId, string caption, string image)
+        public Post(int accountId, string caption)
         {
-            UserId = userId;
+            AccountId = accountId;
             Caption = caption;
-            Image = image;
         }
 
         #endregion
 
         #region Entity Properties
 
-        public string UserId { get; private set; }
+        public int AccountId { get; private set; }
 
         public string Caption { get; private set; }
 
@@ -34,9 +34,30 @@ namespace ImageGram.Core.Domain.AggregateRoots.Post
 
         #endregion
 
-        protected override void EnsureValidState()
+        #region Public Methods
+
+        public void AddImage(string image)
         {
-            
+            Image = image;
         }
+
+        public void AddComment(int accountId, string content)
+        {
+            var comment = new Comment(accountId, Id, content);
+            if (Comments == null || !Comments.Any())
+            {
+                Comments = new List<Comment>
+                {
+                    comment
+                };
+            }
+            else
+            {
+                var comments = Comments.Append(comment);
+                Comments = comments;
+            }
+        }
+
+        #endregion
     }
 }

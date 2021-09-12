@@ -17,17 +17,5 @@ namespace ImageGram.Core.Domain.Commons
         public string LastModifiedBy { get; set; }
 
         #endregion
-
-        #region Protected Methods
-
-        protected abstract void EnsureValidState();
-
-        protected void Apply(Action action)
-        {
-            action();
-            EnsureValidState();
-        }
-
-        #endregion
     }
 }

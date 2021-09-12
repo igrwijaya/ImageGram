@@ -19,8 +19,8 @@ namespace ImageGram.Core.Infrastructure.Services
     {
         #region Fields
 
-        private readonly SignInManager<AppIdentityModel> _signInManager;
-        private readonly UserManager<AppIdentityModel> _userManager;
+        private readonly SignInManager<AppUserIdentity> _signInManager;
+        private readonly UserManager<AppUserIdentity> _userManager;
         private readonly IConfiguration _configuration;
 
         #endregion
@@ -28,8 +28,8 @@ namespace ImageGram.Core.Infrastructure.Services
         #region Constructors
 
         public IdentityService(
-            UserManager<AppIdentityModel> userManager, 
-            SignInManager<AppIdentityModel> signInManager, 
+            UserManager<AppUserIdentity> userManager, 
+            SignInManager<AppUserIdentity> signInManager, 
             IConfiguration configuration)
         {
             _userManager = userManager;
@@ -41,14 +41,14 @@ namespace ImageGram.Core.Infrastructure.Services
 
         #region IIdentityService Members
 
-        public async Task<IdentityResponse> CreateAsync(string name, string email, string password)
+        public async Task<IdentityResponse> CreateAsync(int accountId, string email, string password)
         {
             var response = new IdentityResponse();
             try
             {
-                var user = new AppIdentityModel
+                var user = new AppUserIdentity
                 {
-                    Name = name,
+                    AccountId = accountId,
                     UserName = email,
                     Email = email
                 };
@@ -72,7 +72,9 @@ namespace ImageGram.Core.Infrastructure.Services
             return response;
         }
 
-        public async Task<IdentityResponse> LoginAsync(string email, string password)
+        public async Task<IdentityResponse> LoginAsync(
+            string email, 
+            string password)
         {
             var response = new IdentityResponse();
             var loginResult = await _signInManager.PasswordSignInAsync(email, password, false, false);
@@ -95,14 +97,14 @@ namespace ImageGram.Core.Infrastructure.Services
         
         #region Private Methods
 
-        private string GenerateToken(AppIdentityModel user)
+        private string GenerateToken(AppUserIdentity user)
         {
             var claims = new List<Claim>();
             var customClaims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Sid, user.Id)
+                new Claim(ClaimTypes.Sid, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.AccountId.ToString())
             };
 
             claims.AddRange(customClaims);

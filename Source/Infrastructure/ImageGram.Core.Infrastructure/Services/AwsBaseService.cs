@@ -16,7 +16,7 @@ namespace ImageGram.Core.Infrastructure.Services
     {
         #region Fields
 
-        private static readonly RegionEndpoint BucketRegion = RegionEndpoint.USEast2;
+        private static readonly RegionEndpoint BucketRegion = RegionEndpoint.USEast1;
         private SharedCredentialsFile _sharedCredentialsFile;
         private readonly IConfiguration _configuration;
 

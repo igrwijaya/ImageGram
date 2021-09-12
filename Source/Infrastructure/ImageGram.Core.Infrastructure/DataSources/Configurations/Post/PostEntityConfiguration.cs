@@ -13,10 +13,7 @@ namespace ImageGram.Core.Infrastructure.DataSources.Configurations.Post
 
             builder.Property(prop => prop.LastModifiedBy)
                 .HasMaxLength(CommonEntityConstant.AuditableUserLength);
-            
-            builder.Property(prop => prop.UserId)
-                .IsRequired();
-            
+
             builder.Property(prop => prop.Caption)
                 .HasMaxLength(PostEntityConstant.ContentLength)
                 .IsRequired();
@@ -27,10 +24,6 @@ namespace ImageGram.Core.Infrastructure.DataSources.Configurations.Post
             builder.HasMany(prop => prop.Comments)
                 .WithOne(comment => comment.Post)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(prop => prop.Account)
-                .WithMany(prop => prop.Posts)
-                .HasForeignKey(prop => prop.UserId);
         }
     }
 }

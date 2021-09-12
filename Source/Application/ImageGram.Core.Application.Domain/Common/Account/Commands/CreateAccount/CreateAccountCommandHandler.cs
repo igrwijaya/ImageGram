@@ -2,23 +2,26 @@ using System.Threading;
 using System.Threading.Tasks;
 using ImageGram.Core.Application.Commons;
 using ImageGram.Core.Application.Services;
+using ImageGram.Core.Domain.AggregateRoots.Account;
 using MediatR;
 
-namespace ImageGram.Core.Application.Domain.Common.Account.Command.CreateAccount
+namespace ImageGram.Core.Application.Domain.Common.Account.Commands.CreateAccount
 {
     public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, BaseCommandResult<string>>
     {
         #region Fields
 
         private readonly IIdentityService _identityService;
+        private readonly IAccountRepository _accountRepository;
 
         #endregion
 
         #region Constructors
 
-        public CreateAccountCommandHandler(IIdentityService identityService)
+        public CreateAccountCommandHandler(IIdentityService identityService, IAccountRepository accountRepository)
         {
             _identityService = identityService;
+            _accountRepository = accountRepository;
         }
 
         #endregion
@@ -28,7 +31,11 @@ namespace ImageGram.Core.Application.Domain.Common.Account.Command.CreateAccount
         public async Task<BaseCommandResult<string>> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {
             var response = new BaseCommandResult<string>();
-            var identityResponse = await _identityService.CreateAsync(request.Name, request.Email, request.Password);
+            var account = new Core.Domain.AggregateRoots.Account.Account(request.Name);
+
+            await _accountRepository.CreateAsync(account);
+            
+            var identityResponse = await _identityService.CreateAsync(account.Id, request.Email, request.Password);
 
             if (!identityResponse.IsSuccess)
             {

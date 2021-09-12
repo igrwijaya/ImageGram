@@ -14,17 +14,10 @@ namespace ImageGram.Core.Infrastructure.DataSources.Configurations.Post
 
             builder.Property(prop => prop.LastModifiedBy)
                 .HasMaxLength(CommonEntityConstant.AuditableUserLength);
-            
-            builder.Property(prop => prop.UserId)
-                .IsRequired();
-            
+
             builder.Property(prop => prop.Content)
                 .HasMaxLength(PostEntityConstant.ContentLength)
                 .IsRequired();
-            
-            builder.HasOne(prop => prop.Account)
-                .WithMany(prop => prop.Comments)
-                .HasForeignKey(prop => prop.UserId);
         }
     }
 }
