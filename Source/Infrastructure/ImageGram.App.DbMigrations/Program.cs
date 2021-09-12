@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace ImageGram.App.DbMigrations
+﻿namespace ImageGram.App.DbMigrations
 {
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ApplyMigration.Run();
         }
     }
 }
